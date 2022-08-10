@@ -1,0 +1,59 @@
+.CustomSelectableTileOptionsPane{
+    -fx-padding: 20px;
+    /* -fx-background-color: #111111; */
+}
+
+.CustomTileItem{
+    -fx-padding: 5px 0px 5px 5px;
+    -fx-border-style: solid inside;
+    -fx-border-width: 2;
+    -fx-border-insets: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: rgb(103, 160, 182);
+
+    -fx-font-size: 10px;
+}
+
+#CustomTileItemNode{
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+}
+
+#CustomRemovableTileItem{
+}
+
+#CustomTileItemInputButton{
+    -fx-padding: 0px 10px 0px 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
+
+#CustomTileItemInputButton:hover{
+    -fx-cursor: hand;
+}
+
+#CustomTileItemInputTextField{
+    -fx-padding: 24px 10px 4px 10px;
+}
+
+#CustomTileItemInputTextField:hover{
+    -fx-cursor: hand;
+}
+
+#CustomRemovableClearButton{
+    -fx-padding: 0px 5px 0px 0px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+#CustomRemovableClearButton:hover{
+    -fx-cursor: hand;
+}
+
+/* added to avoid an error from JMetro stylesheet*/
+.combo-box-base {
+    list_cell_color: #2b2b2b;
+}
