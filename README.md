@@ -2,12 +2,12 @@
 
 An improved design of selecting multiple options from a ComboBox. 
 
-You select an item and it gets added into a pane from which you can remove it again. 
-Selecting an option removes it from the ComboBox. 
-All selections are sets so no duplicates are allowed.
-The ComboBox has an "Other..." option which allows you to add a custom test from a TextField. 
-If the value you enter exists in the CombBox it gets added directlly. 
-If the value is already selected it gets skipped. 
+You select an item and it gets added into a pane from which you can remove it again.  
+Selecting an option removes it from the ComboBox.  
+All selections are sets so no duplicates are allowed.  
+The ComboBox has an "Other..." option which allows you to add a custom test from a TextField.  
+If the value you enter exists in the CombBox it gets added directlly.  
+If the value is already selected it gets skipped.  
 
 ![image](https://user-images.githubusercontent.com/64291401/184015111-7c2517af-8412-4da9-b092-04c42716898b.png)
 
