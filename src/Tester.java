@@ -23,6 +23,8 @@ public class Tester extends Application {
 
 
         CustomSelectableTileOptionsPane moduleSelection = new CustomSelectableTileOptionsPane(scene, "opt1", "opt2");
+//        moduleSelection.setAddBtnLast(true);
+//        moduleSelection.enableVerticalScrollOnly(130);
         moduleSelection.addOption("AUTH");
         moduleSelection.addOption("INFO");
         moduleSelection.addOption("TCP ");

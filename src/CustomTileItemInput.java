@@ -33,7 +33,6 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
         btn.setIconOnly(true);
         btn.setId("CustomTileItemInputButton");
 
-
         otherTextField = new TextField();
         otherTextField.setId("CustomTileItemInputTextField");
 
@@ -112,16 +111,19 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
             optionsComboBox.setVisible(false);
             otherTextField.setVisible(false);
             btn.setVisible(true);
+            setMaxWidth(10);
         } else if (state == CustomTileItemInputState.ComboBox) {
             optionsComboBox.setVisible(true);
             otherTextField.setVisible(false);
             btn.setVisible(false);
+            setMaxWidth(getPrefWidth());
         } else {
             optionsComboBox.setVisible(false);
             otherTextField.setVisible(true);
             otherTextField.clear();
             otherTextField.requestFocus();
             btn.setVisible(false);
+            setMaxWidth(getPrefWidth());
         }
     }
 

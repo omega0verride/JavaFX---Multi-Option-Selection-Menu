@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 
-public class CustomSelectableTileOptionsPane extends FlowPane {
+public class CustomSelectableTileOptionsPane extends StackPane {
 
     private ContextMenu menu;
     private MenuItem clearAllMenuItem;
@@ -36,12 +38,21 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
 
     private CustomTileItemInput addOptionsTile;
 
+    private FlowPane flowPane;
 
-    public CustomSelectableTileOptionsPane(Scene scene, String ... allOptions) {
+    private boolean addBtnLast = true;
+
+    private boolean scrollable;
+
+
+    public CustomSelectableTileOptionsPane(Scene scene, String... allOptions) {
         this.scene = scene;
 
-        setVgap(3);
-        setHgap(3);
+        flowPane = new FlowPane();
+        flowPane.setVgap(3);
+        flowPane.setHgap(3);
+
+        disableScroll();
 
         getStylesheets().add(getClass().getResource("customSelectableTileOptionsPane.css").toExternalForm());
 
@@ -81,20 +92,20 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
     private void setAddOptionsTile(CustomTileItemInput node, boolean ignoreUpdate) {
         this.addOptionsTile = node;
         optionsComboBox = addOptionsTile.getOptionsComboBox();
-        int size = getChildren().size();
+        int size = flowPane.getChildren().size();
         if (size == 0)
-            getChildren().add(node);
+            flowPane.getChildren().add(node);
         else
-            getChildren().set(size - 1, addOptionsTile);
-        if (allOptions!=null&&!ignoreUpdate)
+            flowPane.getChildren().set(size - 1, addOptionsTile);
+        if (allOptions != null && !ignoreUpdate)
             setOptions(allOptions);
     }
 
     public Node getAddOptionsTile() {
-        return getChildren().get(getChildren().size() - 1);
+        return flowPane.getChildren().get(flowPane.getChildren().size() - 1);
     }
 
-    public void emitChange(){
+    public void emitChange() {
         Event event = new CustomSelectableTileOptionsPaneEvent(SELECTION_CHANGED);
         this.fireEvent(event);
     }
@@ -103,14 +114,14 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         this.availableOptions.clear();
         optionsComboBox.getItems().clear();
         this.selectedOptions.clear();
-        this.getChildren().clear();
+        this.flowPane.getChildren().clear();
 
         this.allOptions = allOptions;
         for (String val : allOptions.toArray(new String[0])) { // use a copy to avoid concurrency
             allOptions.remove(val); // replace it with the uppercase version
             allOptions.add(val.toUpperCase());
             availableOptions.add(val.toUpperCase());
-            optionsComboBox.getItems().add(0, val.toUpperCase());
+            optionsComboBox.getItems().add(getNewSelectionIndex(), val.toUpperCase());
         }
         setComboBoxOtherOptionString(comboBoxOtherOptionString, true);
         setComboBoxDefaultOptionString(comboBoxDefaultOptionString, true);
@@ -129,7 +140,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
             return false;
         if (!availableOptions.add(key))
             return false;
-        optionsComboBox.getItems().add(0, key);
+        optionsComboBox.getItems().add(getNewSelectionIndex(), key);
         emitChange();
         return true;
     }
@@ -141,7 +152,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
 
         Node toRemove = selectedOptions.remove(key);
         if (toRemove != null)
-            getChildren().remove(toRemove);
+            flowPane.getChildren().remove(toRemove);
 
         if (!availableOptions.remove(key))
             return false;
@@ -160,7 +171,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         optionsComboBox.getItems().remove(key);
         if (!selectedOptions.containsKey(key)) {
             selectedOptions.put(key, new CustomRemovableTileItem(key, this));
-            getChildren().add(0, selectedOptions.get(key));
+            flowPane.getChildren().add(getNewSelectionIndex(), selectedOptions.get(key));
         }
         emitChange();
         return true;
@@ -174,8 +185,8 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
             return false;
         if (!availableOptions.add(key))
             return false;
-        optionsComboBox.getItems().add(0, key);
-        getChildren().remove(selectedOptions.get(key));
+        optionsComboBox.getItems().add(getNewSelectionIndex(), key);
+        flowPane.getChildren().remove(selectedOptions.get(key));
         selectedOptions.remove(key);
         emitChange();
         return true;
@@ -187,7 +198,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
             return selectOption(option);
         if (!selectedOptions.containsKey(key)) {
             selectedOptions.put(key, new CustomRemovableTileItem(key, this));
-            getChildren().add(0, selectedOptions.get(key));
+            flowPane.getChildren().add(getNewSelectionIndex(), selectedOptions.get(key));
             emitChange();
         }
         return true;
@@ -199,7 +210,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
             return deselectOption(key);
         if (!selectedOptions.containsKey(key))
             return false;
-        getChildren().remove(selectedOptions.get(key));
+        flowPane.getChildren().remove(selectedOptions.get(key));
         selectedOptions.remove(key);
         emitChange();
         return true;
@@ -253,5 +264,62 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         return selectedOptions.keySet().toArray(new String[0]);
     }
 
+    private int getNewSelectionIndex() {
+        if (addBtnLast)
+            return 0;
+        return 1;
+    }
 
+    public boolean isAddBtnLast() {
+        return addBtnLast;
+    }
+
+    public void setAddBtnLast(boolean addBtnLast) {
+        this.addBtnLast = addBtnLast;
+    }
+
+    public void disableScroll() {
+        this.scrollable = false;
+        this.getChildren().clear();
+        this.getChildren().add(flowPane);
+        setMaxHeight(getPrefHeight());
+        setMinHeight(getPrefHeight());
+        setMaxWidth(getPrefWidth());
+        setMinWidth(getPrefWidth());
+    }
+
+    public void enableScroll(double height, double width) {
+        this.scrollable = true;
+        this.getChildren().clear();
+        ScrollPane scrollPane = new ScrollPane();
+        this.getChildren().add(scrollPane);
+        scrollPane.setContent(flowPane);
+        if (height > 0) {
+            setMaxHeight(height);
+            setMinHeight(height);
+            scrollPane.setFitToHeight(false);
+        } else {
+            scrollPane.setFitToHeight(true);
+        }
+        if (width > 0) {
+            setMaxWidth(width);
+            setMinWidth(width);
+            scrollPane.setFitToWidth(false);
+        } else {
+            scrollPane.setFitToWidth(true);
+        }
+
+    }
+
+    public void enableHorizontalScrollOnly(double width) {
+        this.enableScroll(-1, width);
+    }
+
+    public void enableVerticalScrollOnly(double height) {
+        this.enableScroll(height, -1);
+    }
+
+    public boolean isScrollable() {
+        return scrollable;
+    }
 }
