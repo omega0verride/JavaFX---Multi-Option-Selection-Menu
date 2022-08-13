@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -7,6 +8,7 @@ import jfxtras.styles.jmetro.JMetroStyleClass;
 import jfxtras.styles.jmetro.Style;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Tester extends Application {
 
@@ -31,7 +33,13 @@ public class Tester extends Application {
         moduleSelection.addOption("test");
         root.getChildren().add(moduleSelection);
 
-
+        moduleSelection.addEventHandler(CustomSelectableTileOptionsPane.SELECTION_CHANGED, new EventHandler<CustomSelectableTileOptionsPaneEvent>() {
+                    @Override
+                    public void handle(CustomSelectableTileOptionsPaneEvent customSelectableTileOptionsPaneEvent) {
+                        System.out.println(Arrays.toString(moduleSelection.getSelectedOptionsAsArray()));
+                    }
+                }
+        );
         jMetro.setScene(scene);
         stage.setScene(scene);
         stage.setAlwaysOnTop(false);

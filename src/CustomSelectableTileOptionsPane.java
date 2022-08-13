@@ -1,4 +1,6 @@
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -30,6 +32,8 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
     private String comboBoxDefaultOptionString = "Select";
     private String comboBoxOtherOptionString = "Other...";
 
+    public static EventType<CustomSelectableTileOptionsPaneEvent> SELECTION_CHANGED = new EventType<>("SELECTION_CHANGED");
+
     private CustomTileItemInput addOptionsTile;
 
 
@@ -52,8 +56,6 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         menu.getItems().add(clearAllMenuItem);
 
         addContextMenuListener();
-
-        this.scene = scene;
 
     }
 
@@ -92,6 +94,11 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         return getChildren().get(getChildren().size() - 1);
     }
 
+    public void emitChange(){
+        Event event = new CustomSelectableTileOptionsPaneEvent(SELECTION_CHANGED);
+        this.fireEvent(event);
+    }
+
     private void setOptions(HashSet<String> allOptions) {
         this.availableOptions.clear();
         optionsComboBox.getItems().clear();
@@ -109,6 +116,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         setComboBoxDefaultOptionString(comboBoxDefaultOptionString, true);
         optionsComboBox.getSelectionModel().selectLast();
         setAddOptionsTile(addOptionsTile);
+        emitChange();
     }
 
     public HashSet<String> getOptions() {
@@ -122,6 +130,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         if (!availableOptions.add(key))
             return false;
         optionsComboBox.getItems().add(0, key);
+        emitChange();
         return true;
     }
 
@@ -137,6 +146,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         if (!availableOptions.remove(key))
             return false;
         optionsComboBox.getItems().remove(key);
+        emitChange();
         return true;
     }
 
@@ -152,6 +162,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
             selectedOptions.put(key, new CustomRemovableTileItem(key, this));
             getChildren().add(0, selectedOptions.get(key));
         }
+        emitChange();
         return true;
     }
 
@@ -166,6 +177,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         optionsComboBox.getItems().add(0, key);
         getChildren().remove(selectedOptions.get(key));
         selectedOptions.remove(key);
+        emitChange();
         return true;
     }
 
@@ -176,6 +188,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
         if (!selectedOptions.containsKey(key)) {
             selectedOptions.put(key, new CustomRemovableTileItem(key, this));
             getChildren().add(0, selectedOptions.get(key));
+            emitChange();
         }
         return true;
     }
@@ -188,6 +201,7 @@ public class CustomSelectableTileOptionsPane extends FlowPane {
             return false;
         getChildren().remove(selectedOptions.get(key));
         selectedOptions.remove(key);
+        emitChange();
         return true;
     }
 
