@@ -1,6 +1,8 @@
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 
 public class CustomRemovableTileItem extends CustomTileItem<HBox> {
     private HBox root;
@@ -19,7 +21,7 @@ public class CustomRemovableTileItem extends CustomTileItem<HBox> {
         CustomRemoveButton button = new CustomRemoveButton(15);
         button.setIconOnly(true);
         button.setId("CustomRemovableClearButton");
-        button.setOnMouseClicked(e->tilePane.deselectOption(key));
+        button.setOnMouseClicked(e -> tilePane.deselectOption(key));
         root.getChildren().add(button);
 
         root.setId("CustomRemovableTileItem");

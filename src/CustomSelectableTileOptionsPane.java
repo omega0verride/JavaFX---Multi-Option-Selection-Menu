@@ -3,10 +3,12 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.util.Arrays;
@@ -17,28 +19,21 @@ import java.util.stream.Collectors;
 
 public class CustomSelectableTileOptionsPane extends StackPane {
 
-    private ContextMenu menu;
-    private MenuItem clearAllMenuItem;
-
+    public static EventType<CustomSelectableTileOptionsPaneEvent> SELECTION_CHANGED = new EventType<>("SELECTION_CHANGED");
+    Scene scene;
+    private final ContextMenu menu;
+    private final MenuItem clearAllMenuItem;
     private HashSet<String> allOptions;
-
-    private HashMap<String, Node> selectedOptions = new HashMap<>();
-
+    private final HashMap<String, Node> selectedOptions = new HashMap<>();
     // these should be parallel to each other
     private ComboBox<String> optionsComboBox;
-    private HashSet<String> availableOptions = new HashSet<>();
-
+    private final HashSet<String> availableOptions = new HashSet<>();
     private EventHandler<MouseEvent> hideMenuEventHandler;
-
-    Scene scene;
     private String comboBoxDefaultOptionString = "Select";
     private String comboBoxOtherOptionString = "Other...";
-
-    public static EventType<CustomSelectableTileOptionsPaneEvent> SELECTION_CHANGED = new EventType<>("SELECTION_CHANGED");
-
     private CustomTileItemInput addOptionsTile;
 
-    private FlowPane flowPane;
+    private final FlowPane flowPane;
 
     private boolean addBtnLast = true;
 
@@ -84,11 +79,6 @@ public class CustomSelectableTileOptionsPane extends StackPane {
         });
     }
 
-
-    public void setAddOptionsTile(CustomTileItemInput node) {
-        setAddOptionsTile(node, true);
-    }
-
     private void setAddOptionsTile(CustomTileItemInput node, boolean ignoreUpdate) {
         this.addOptionsTile = node;
         optionsComboBox = addOptionsTile.getOptionsComboBox();
@@ -105,9 +95,17 @@ public class CustomSelectableTileOptionsPane extends StackPane {
         return flowPane.getChildren().get(flowPane.getChildren().size() - 1);
     }
 
+    public void setAddOptionsTile(CustomTileItemInput node) {
+        setAddOptionsTile(node, true);
+    }
+
     public void emitChange() {
         Event event = new CustomSelectableTileOptionsPaneEvent(SELECTION_CHANGED);
         this.fireEvent(event);
+    }
+
+    public HashSet<String> getOptions() {
+        return allOptions;
     }
 
     private void setOptions(HashSet<String> allOptions) {
@@ -128,10 +126,6 @@ public class CustomSelectableTileOptionsPane extends StackPane {
         optionsComboBox.getSelectionModel().selectLast();
         setAddOptionsTile(addOptionsTile);
         emitChange();
-    }
-
-    public HashSet<String> getOptions() {
-        return allOptions;
     }
 
     public boolean addOption(String option) {
@@ -220,10 +214,6 @@ public class CustomSelectableTileOptionsPane extends StackPane {
         return optionsComboBox;
     }
 
-    public void setComboBoxDefaultOptionString(String comboBoxDefaultOptionString) {
-        setComboBoxDefaultOptionString(comboBoxDefaultOptionString, false);
-    }
-
     public void setComboBoxDefaultOptionString(String comboBoxDefaultOptionString, boolean init) {
         this.comboBoxDefaultOptionString = comboBoxDefaultOptionString;
         int size = optionsComboBox.getItems().size();
@@ -232,10 +222,6 @@ public class CustomSelectableTileOptionsPane extends StackPane {
         else
             optionsComboBox.getItems().set(size - 1, comboBoxDefaultOptionString);
         addOptionsTile.setComboBoxDefaultOptionString(comboBoxDefaultOptionString);
-    }
-
-    public void setComboBoxOtherOptionString(String comboBoxOtherOptionString) {
-        setComboBoxOtherOptionString(comboBoxOtherOptionString, false);
     }
 
     public void setComboBoxOtherOptionString(String comboBoxOtherOptionString, boolean init) {
@@ -252,8 +238,16 @@ public class CustomSelectableTileOptionsPane extends StackPane {
         return comboBoxDefaultOptionString;
     }
 
+    public void setComboBoxDefaultOptionString(String comboBoxDefaultOptionString) {
+        setComboBoxDefaultOptionString(comboBoxDefaultOptionString, false);
+    }
+
     public String getComboBoxOtherOptionString() {
         return comboBoxOtherOptionString;
+    }
+
+    public void setComboBoxOtherOptionString(String comboBoxOtherOptionString) {
+        setComboBoxOtherOptionString(comboBoxOtherOptionString, false);
     }
 
     public java.util.Set<String> getSelectedOptions() {

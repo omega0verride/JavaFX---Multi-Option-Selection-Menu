@@ -12,6 +12,10 @@ import java.util.Arrays;
 
 public class Tester extends Application {
 
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         HBox root = new HBox();
@@ -19,7 +23,6 @@ public class Tester extends Application {
 
         JMetro jMetro = new JMetro(Style.DARK);
         root.getStyleClass().add(JMetroStyleClass.BACKGROUND);
-
 
 
         CustomSelectableTileOptionsPane moduleSelection = new CustomSelectableTileOptionsPane(scene, "opt1", "opt2");
@@ -46,9 +49,5 @@ public class Tester extends Application {
         stage.setScene(scene);
         stage.setAlwaysOnTop(false);
         stage.show();
-    }
-
-    public static void main(String[] args) {
-        Application.launch(args);
     }
 }

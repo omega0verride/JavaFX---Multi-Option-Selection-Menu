@@ -3,14 +3,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class AddButton extends Button {
-    String iconPath="plus_icon.png";
+    String iconPath = "plus_icon.png";
+
     public AddButton() {
         setText("Add");
         setFocusTraversable(false);
         setGraphic(getImage());
     }
 
-    public AddButton(int size){
+    public AddButton(int size) {
         this();
         setIconSize(size);
     }
@@ -24,12 +25,12 @@ public class AddButton extends Button {
         return new ImageView(image);
     }
 
-    public void setIconOnly(boolean value){
+    public void setIconOnly(boolean value) {
         if (value)
             setText("");
     }
 
-    public void setIconSize(int size){
+    public void setIconSize(int size) {
         setGraphic(getResizedImage(size));
     }
 }

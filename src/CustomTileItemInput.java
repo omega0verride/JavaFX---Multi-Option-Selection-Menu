@@ -16,10 +16,9 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
     private final CustomSelectableTileOptionsPane tilePane;
     private final AddButton btn;
     private final ComboBox<String> optionsComboBox;
-
+    private final TextField otherTextField;
     private String comboBoxDefaultOptionString = "Select";
     private String comboBoxOtherOptionString = "Other...";
-    private final TextField otherTextField;
 
     public CustomTileItemInput(Scene scene, CustomSelectableTileOptionsPane tilePane) {
         super(StackPane::new);
@@ -54,6 +53,17 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
 
     }
 
+    public static void delayedThread(long delayMs, Runnable toRun) {
+        Thread t = new Thread(() -> {
+            try {
+                Thread.sleep(delayMs);
+            } catch (InterruptedException ignored) {
+            }
+            Platform.runLater(toRun);
+        });
+        t.setDaemon(true);
+        t.start();
+    }
 
     private void addTextFieldDoneListener() {
         otherTextField.setOnKeyPressed(e -> {
@@ -102,7 +112,7 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
                     }
                 }
             });
-            return cell ;
+            return cell;
         });
     }
 
@@ -146,7 +156,6 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
         });
     }
 
-
     private void setButtonListener() {
         btn.setOnMouseClicked(e -> {
             setState(CustomTileItemInputState.ComboBox);
@@ -154,18 +163,6 @@ public class CustomTileItemInput extends CustomTileItem<StackPane> {
             // delay sometime in order to wait for the show operation
             delayedThread(10, optionsComboBox::show);
         });
-    }
-
-    public static void delayedThread(long delayMs, Runnable toRun) {
-        Thread t = new Thread(() -> {
-            try {
-                Thread.sleep(delayMs);
-            } catch (InterruptedException ignored) {
-            }
-            Platform.runLater(toRun);
-        });
-        t.setDaemon(true);
-        t.start();
     }
 
     public String getComboBoxDefaultOptionString() {

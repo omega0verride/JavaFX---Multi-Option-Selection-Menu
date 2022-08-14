@@ -12,26 +12,27 @@ public class CustomTileItem<T extends javafx.scene.layout.Pane> extends StackPan
         root = supplier.get();
         this.getChildren().add(root);
 
-        if (node!=null) {
+        if (node != null) {
             root.getChildren().add(node);
             node.setId("CustomTileItemNode");
         }
         root.getStyleClass().add("CustomTileItem");
     }
+
     public CustomTileItem(String text, java.util.function.Supplier<T> supplier) {
-       this(new Label(text), supplier);
+        this(new Label(text), supplier);
     }
 
     public CustomTileItem(java.util.function.Supplier<T> supplier) {
         this((Node) null, supplier);
     }
 
-    public T getRootPane(){
+    public T getRootPane() {
         return root;
     }
 
-    public void setRootPane(T root){
-        this.root=root;
+    public void setRootPane(T root) {
+        this.root = root;
     }
 
 }
